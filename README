@@ -9,7 +9,7 @@ This library provides a wrapper for easily performing search on a digir server.
 Usage:
 
 <?php
-$records = SimpleDigir::create($urlOfTheServer)->filter("ScientificName","like","Quercus%")->getResult();
+$records = SimpleDigir::create($urlOfTheServer)->setResource('GBIF')->filter("ScientificName","like","Quercus%")->getResult();
 foreach($records as $record) {
     echo $record->Species ;
 }
