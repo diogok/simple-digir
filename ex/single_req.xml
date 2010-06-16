@@ -1,0 +1,26 @@
+<request xmlns='http://digir.net/schema/protocol/2003/1.0'
+    xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:digir='http://digir.net/schema/protocol/2003/1.0'
+    xmlns:darwin='http://digir.net/schema/conceptual/darwin/2003/1.0'
+    xmlns:dwc='http://digir.net/schema/conceptual/darwin/2003/1.0'
+    xsi:schemaLocation='http://digir.net/schema/protocol/2003/1.0 http://digir.sourceforge.net/schema/protocol/2003/1.0/digir.xsd http://digir.net/schema/conceptual/darwin/2003/1.0 http://digir.sourceforge.net/schema/conceptual/darwin/2003/1.0/darwin2.xsd'>
+    <header>
+        <version>$version</version>
+        <sendTime>$DateFormatter.currentDateTimeAsXMLString()</sendTime>
+        <source>$hostAddress</source>
+        <destination resource='GBIF'>http://www.kew.org/digir/www/DiGIR.php</destination>
+        <type>search</type>
+    </header>
+    <search>
+        <filter>
+            <equals>
+                <dwc:ScientificName>Quercus alba L. var. pinnatifida Michx.</dwc:ScientificName>
+            </equals>
+        </filter>
+        <records limit="900" start="0">		
+            <structure schemaLocation="http://digir.sourceforge.net/schema/conceptual/darwin/full/2003/1.0/darwin2full.xsd"/>
+        </records>
+        <count>$count</count>
+    </search>
+</request>

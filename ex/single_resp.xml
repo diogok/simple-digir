@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<response xmlns='http://digir.net/schema/protocol/2003/1.0'>
+<header>
+<version>$Revision: 1.21 $</version>
+<sendTime>2010-06-16T18:08:09+01:00</sendTime>
+<source resource="GBIF">http://data.kew.org:80/digir/www/DiGIR.php</source>
+<destination>127.0.0.1</destination>
+<type>search</type>
+</header>
+<content xmlns:darwin='http://digir.net/schema/conceptual/darwin/2003/1.0' xmlns:dwc='http://digir.net/schema/conceptual/darwin/2003/1.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+<record>
+<darwin:DateLastModified>2004-08-04T15:29:00+01:00</darwin:DateLastModified>
+<darwin:InstitutionCode>K</darwin:InstitutionCode>
+<darwin:CollectionCode>Herbarium</darwin:CollectionCode>
+<darwin:CatalogNumber>K000227805</darwin:CatalogNumber>
+<darwin:ScientificName>Quercus alba L. var. pinnatifida Michx.</darwin:ScientificName>
+<darwin:BasisOfRecord>PreservedSpecimen</darwin:BasisOfRecord>
+<darwin:Kingdom>Plantae</darwin:Kingdom>
+<darwin:Phylum xsi:nil='true'/>
+<darwin:Class xsi:nil='true'/>
+<darwin:Order xsi:nil='true'/>
+<darwin:Family>FAGACEAE</darwin:Family>
+<darwin:Genus>Quercus</darwin:Genus>
+<darwin:Species>alba</darwin:Species>
+<darwin:Subspecies>pinnatifida</darwin:Subspecies>
+<darwin:ScientificNameAuthor>Michx.</darwin:ScientificNameAuthor>
+<darwin:IdentifiedBy xsi:nil='true'/>
+<darwin:YearIdentified xsi:nil='true'/>
+<darwin:MonthIdentified xsi:nil='true'/>
+<darwin:DayIdentified xsi:nil='true'/>
+<darwin:TypeStatus xsi:nil='true'/>
+<darwin:CollectorNumber xsi:nil='true'/>
+<darwin:FieldNumber xsi:nil='true'/>
+<darwin:Collector xsi:nil='true'/>
+<darwin:YearCollected xsi:nil='true'/>
+<darwin:MonthCollected xsi:nil='true'/>
+<darwin:DayCollected xsi:nil='true'/>
+<darwin:JulianDay xsi:nil='true'/>
+<darwin:TimeOfDay xsi:nil='true'/>
+<darwin:ContinentOcean xsi:nil='true'/>
+<darwin:Country xsi:nil='true'/>
+<darwin:StateProvince xsi:nil='true'/>
+<darwin:County xsi:nil='true'/>
+<darwin:Locality xsi:nil='true'/>
+<darwin:Longitude xsi:nil='true'/>
+<darwin:Latitude xsi:nil='true'/>
+<darwin:CoordinatePrecision xsi:nil='true'/>
+<darwin:MinimumElevation xsi:nil='true'/>
+<darwin:MaximumElevation xsi:nil='true'/>
+<darwin:MinimumDepth xsi:nil='true'/>
+<darwin:MaximumDepth xsi:nil='true'/>
+<darwin:Sex xsi:nil='true'/>
+<darwin:PreparationType xsi:nil='true'/>
+<darwin:IndividualCount xsi:nil='true'/>
+<darwin:PreviousCatalogNumber xsi:nil='true'/>
+<darwin:RelationshipType xsi:nil='true'/>
+<darwin:RelatedCatalogItem xsi:nil='true'/>
+<darwin:Notes>http://www.kew.org/herbcat/detailsQuery.do?barcode=K000227805</darwin:Notes>
+</record>
+</content>
+<diagnostics>
+<diagnostic code="Unknown PHP Error [2]" severity="warn">gethostbyaddr() [&lt;a href='function.gethostbyaddr'&gt;function.gethostbyaddr&lt;/a&gt;]: Address is not a valid IPv4 or IPv6 address (/var/www/DiGIR/www/DiGIR.php:422)</diagnostic>
+<diagnostic code="STATUS_INTERVAL" severity="info">3600</diagnostic>
+<diagnostic code="STATUS_DATA" severity="info">1,4,0</diagnostic>
+<diagnostic code="RECORD_COUNT" severity="info">1</diagnostic>
+<diagnostic code="END_OF_RECORDS" severity="info">true</diagnostic>
+</diagnostics></response>
