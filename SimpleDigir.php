@@ -7,6 +7,9 @@ class SimpleDigir {
     public $limit = 999;
     public $start = 0;
     public $result = array();
+    public $request = "";
+    public $response = "";
+    public $resource = "";
 
     private function __construct($url) {
         $this->url = $url;
@@ -14,6 +17,11 @@ class SimpleDigir {
 
     static public function create($url) {
         return new SimpleDigir($url);
+    }
+
+    public function setResource($rec) {
+        $this->resource = $rec;
+        return $this;
     }
 
     public function addFilter($field,$operator,$term) {
@@ -53,8 +61,8 @@ class SimpleDigir {
         $xml  = "\t<header>\n";
         $xml .= "\t\t<version>\$version</version>\n";
         $xml .= "\t\t<sendTime>\$DateFormatter.currentDateTimeAsXMLString()</sendTime>\n";
-        $xml .= "\t\t<source>\$hostAddress</source>\n";
-        $xml .= "\t\t<destination resource=\"GBIF\">".$this->url."</destination>\n";
+        $xml .= "\t\t<source>".getenv("SERVER_NAME")."</source>\n";
+        $xml .= "\t\t<destination resource=\"".$this->resource."\">".$this->url."</destination>\n";
         $xml .= "\t\t<type>search</type>\n";
         $xml .= "\t</header>\n";
         return $xml ;
@@ -112,8 +120,10 @@ class SimpleDigir {
     public function call() {
         if(!empty($this->result)) return $this;
         $request = $this->makeRequest();
+        $this->request = $request ;
         $url = $this->url . "?request=".urlencode($request);
         $response = file_get_contents($url);
+        $this->response = $response ;
         if($response === false) return null;
         $this->result = $this->parse($response);
         return $this;

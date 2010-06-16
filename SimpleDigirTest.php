@@ -21,8 +21,8 @@ class SimpleDigirTest extends PHPUnit_Framework_TestCase {
     }
 
     function testHeader() {
-        $s = SimpleDigir::create("foobar");
-        $should = '<header><version>$version</version><sendTime>$DateFormatter.currentDateTimeAsXMLString()</sendTime><source>$hostAddress</source><destination resource="GBIF">foobar</destination><type>search</type></header>';
+        $s = SimpleDigir::create("foobar")->setResource('GBIF');
+        $should = '<header><version>$version</version><sendTime>$DateFormatter.currentDateTimeAsXMLString()</sendTime><source>'.getenv("SERVER_NAME").'</source><destination resource="GBIF">foobar</destination><type>search</type></header>';
         $this->assertEquals(clear($should),clear($s->header()));
     }
 
