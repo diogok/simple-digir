@@ -111,6 +111,7 @@ class SimpleDigir {
     }
 
     public function call() {
+        if(!empty($this->result)) return $this;
         $request = urlencode($this->makeRequest());
         $url = $this->url . "?request=".$request;
         $response = file_get_contents($url);
@@ -120,6 +121,9 @@ class SimpleDigir {
     }
 
     public function getResult() {
+        if(empty($this->result)) {
+            $this->call();
+        }
         return $this->result;
     }
 
