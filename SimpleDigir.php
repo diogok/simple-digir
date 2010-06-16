@@ -19,6 +19,23 @@ class SimpleDigir {
         return new SimpleDigir($url);
     }
 
+    public function parseResources($xml) {
+        $dom = DOMDocument::loadXML($xml);
+        $tags = $dom->getElementsByTagName("resource");
+        $recs = array();
+        foreach($tags as $item) {
+            $rec = new StdClass ;
+            $rec->name = $item->getElementsByTagName("name")->item(0)->nodeValue;
+            $rec->code = $item->getElementsByTagName("code")->item(0)->nodeValue;
+            $recs[] = $rec;
+        }
+        return $recs;
+    }
+
+    public function listResources() {
+        return $this->parseResources(file_get_contents($this->url));
+    }
+
     public function setResource($rec) {
         $this->resource = $rec;
         return $this;

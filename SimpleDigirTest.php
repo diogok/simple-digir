@@ -51,5 +51,15 @@ class SimpleDigirTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(null,$recs[1]->a);
         $this->assertEquals("bar",$recs[1]->b);
     }
+
+    function testResourcesParser() {
+        $xml ="<tag><name>abc</name><resource><name>foo</name><code>bar</code></resource><resource><name>barr</name><code>foo</code></resource></tag>";
+        $recs = SimpleDigir::create("foobar")->parseResources($xml);
+        $this->assertEquals("foo",$recs[0]->name);
+        $this->assertEquals("bar",$recs[0]->code);
+        $this->assertEquals("barr",$recs[1]->name);
+        $this->assertEquals("foo",$recs[1]->code);
+
+    }
 }
 ?>
