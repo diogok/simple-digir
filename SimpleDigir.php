@@ -7,8 +7,6 @@ class SimpleDigir {
     public $limit = 999;
     public $start = 0;
     public $result = array();
-    public $request = "";
-    public $response = "";
     public $resource = "";
 
     private function __construct($url) {
@@ -30,10 +28,6 @@ class SimpleDigir {
             $recs[] = $rec;
         }
         return $recs;
-    }
-
-    public function listResources() {
-        return $this->parseResources(file_get_contents($this->url));
     }
 
     public function setResource($rec) {
@@ -139,13 +133,13 @@ class SimpleDigir {
 
     public function call() {
         if(!empty($this->result)) return $this;
-        $request = $this->makeRequest();
-        $this->request = $request ;
-        $url = $this->url . "?request=".urlencode($request);
-        $response = file_get_contents($url);
-        $this->response = $response ;
-        if($response === false) return null;
-        $this->result = $this->parse($response);
+        if($this->resource == "") {
+        } else if($this->resource == "*") { 
+             $this->result = $this->parseResources(file_get_contents($this->url));
+        } else {
+            $url = $this->url . "?request=".urlencode($this->makeRequest());
+            $this->result = $this->parse(file_get_contents($url));
+        }
         return $this;
     }
 

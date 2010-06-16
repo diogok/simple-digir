@@ -8,7 +8,7 @@ class DigirQuery {
 
     static public function query($sql) {
         $sql = trim($sql);
-        $regex = "@^SELECT ([\w\d_-]+) FROM ([^ ]+)( WHERE .*)?$@i";
+        $regex = "@^SELECT ([\w\d_\*-]+) FROM ([^ ]+)( WHERE .*)?$@i";
         if(preg_match($regex,$sql,$reg)) {
             $resource = $reg[1];
             $url = $reg[2];

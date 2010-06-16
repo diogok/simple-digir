@@ -27,6 +27,8 @@ class DigirQueryTest extends PHPUnit_Framework_TestCase {
         $xml =  SimpleDigir::create($url)->setResource("re-foo_bar123")->addFilter("foo","equals","bar")->addFilter('bar','like','foo%')->makeRequest();
         $this->assertEquals($xml,DigirQuery::query($sql)->makeRequest());
 
+        $sql =  "SELECT * FROM http://url.com";
+        $this->assertEquals("*",DigirQuery::query($sql)->resource);
     }
 }
 ?>

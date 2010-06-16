@@ -64,5 +64,6 @@ class SimpleDigirTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals("foo",$recs[1]->code);
 
     }
+
 }
 ?>
