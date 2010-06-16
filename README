@@ -1,0 +1,18 @@
+SimpleDigir
+
+This is a PHP library, php webservice wrapper and simple interface for performing searchs on DIGIR services.
+
+DIGIR is a (old, bad and ugly) protocol for interchange of biological data in the Darwin Core format, and it's widely adopted. A nice list of Digir servers can be found at http://bigdig.ecoforge.net/wiki/ProviderStatus .
+
+This library provides a wrapper for easily performing search on a digir server.
+
+Usage:
+
+<?php
+$records = SimpleDigir::create($urlOfTheServer)->filter("ScientificName","like","Quercus%")->getResult();
+foreach($records as $record) {
+    echo $record->Species ;
+}
+?>
+
+By now only the PHP Library is implemented, supporting only one parameter/filter per query.
