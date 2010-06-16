@@ -18,6 +18,9 @@ class SimpleDigirTest extends PHPUnit_Framework_TestCase {
         $s->addFilter("ScientificName","like","Quercus");
         $shouldBe = '<filter><like><dwc:ScientificName>Quercus</dwc:ScientificName></like></filter>';
         $this->assertEquals(clear($s->filters()),$shouldBe);
+
+        $s = SimpleDigir::create("foobar");
+        $this->assertEquals(clear($s->filters()),"<filter><like><dwc:ScientificName>%</dwc:ScientificName></like></filter>");
     }
 
     function testHeader() {
@@ -43,7 +46,7 @@ class SimpleDigirTest extends PHPUnit_Framework_TestCase {
     }
 
     function testParser() {
-        $xml = "<result><record><a>abc</a><b /><c>foo</c></record><record><a /><b>bar</b></record></result>";
+        $xml = "<result xmlns:d='null'><record><d:a>abc</d:a><b /><c>foo</c></record><record><a /><b>bar</b></record></result>";
         $recs = SimpleDigir::create("foobar")->parse($xml);
         $this->assertEquals("abc",$recs[0]->a);
         $this->assertEquals(null,$recs[0]->b);

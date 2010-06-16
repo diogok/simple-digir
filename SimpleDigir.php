@@ -86,6 +86,9 @@ class SimpleDigir {
     }
 
     public function filters() {
+        if(count($this->filters) < 1) {
+            $this->addFilter("ScientificName","like","%");
+        }
         $xml = "\t\t<filter>\n";
         foreach($this->filters as $f) {
             $xml .= "\t\t\t<".$f->operator.">\n";
@@ -125,7 +128,7 @@ class SimpleDigir {
         foreach($found as $item) {
             $rec = new StdClass ;
             foreach($item->childNodes as $dwc) {
-                $name = $dwc->nodeName ;
+                $name = $dwc->localName ;
                 $value = $dwc->nodeValue;
                 $rec->$name = $value;
             }
