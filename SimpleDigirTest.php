@@ -2,6 +2,10 @@
 require_once 'PHPUnit/Framework.php';
 include 'SimpleDigir.php';
 
+function clear($txt) {
+    return str_replace("\n","",str_replace("\t","",$txt));
+}
+
 class SimpleDigirTest extends PHPUnit_Framework_TestCase {
 
     function testCreate() {
@@ -13,19 +17,13 @@ class SimpleDigirTest extends PHPUnit_Framework_TestCase {
         $s = SimpleDigir::create("foobar");
         $s->addFilter("ScientificName","like","Quercus");
         $shouldBe = '<filter><like><dwc:ScientificName>Quercus</dwc:ScientificName></like></filter>';
-        $this->assertEquals($s->filters(),$shouldBe);
+        $this->assertEquals(clear($s->filters()),$shouldBe);
     }
 
     function testHeader() {
         $s = SimpleDigir::create("foobar");
-        $should = '<header>
-                <version>$version</version>
-                <sendTime>$DateFormatter.currentDateTimeAsXMLString()</sendTime>
-                <source>$hostAddress</source>
-                <destination resource="GBIF">foobar</destination>
-                <type>search</type>
-                </header>';
-        $this->assertEquals($should,$s->header());
+        $should = '<header><version>$version</version><sendTime>$DateFormatter.currentDateTimeAsXMLString()</sendTime><source>$hostAddress</source><destination resource="GBIF">foobar</destination><type>search</type></header>';
+        $this->assertEquals(clear($should),clear($s->header()));
     }
 
     function testRecordPaging() {
@@ -34,14 +32,14 @@ class SimpleDigirTest extends PHPUnit_Framework_TestCase {
         $xml .= '<records limit="10" start="5">';
         $xml .= '<structure schemaLocation="http://digir.sourceforge.net/schema/conceptual/darwin/full/2003/1.0/darwin2full.xsd"/>';
         $xml .= '</records>';
-        $this->assertEquals($xml,$s->records());
+        $this->assertEquals($xml,clear($s->records()));
 
         $s = SimpleDigir::create("foobar");
         $xml  = '';
         $xml .= '<records limit="999" start="0">';
         $xml .= '<structure schemaLocation="http://digir.sourceforge.net/schema/conceptual/darwin/full/2003/1.0/darwin2full.xsd"/>';
         $xml .= '</records>';
-        $this->assertEquals($xml,$s->records());
+        $this->assertEquals($xml,clear($s->records()));
     }
 
     function testParser() {

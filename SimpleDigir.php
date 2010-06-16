@@ -36,61 +36,60 @@ class SimpleDigir {
     }
 
     public function xmlns() {
-        $xmlns = '';
-        $xmlns .= "xmlns='http://digir.net/schema/protocol/2003/1.0'";
-        $xmlns .= "xmlns:xsd='http://www.w3.org/2001/XMLSchema'";
-        $xmlns .= "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'";
-        $xmlns .= "xmlns::digir='http://digir.net/schema/protocol/2003/1.0'";
-        $xmlns .= "xmlns::darwin='http://digir.net/schema/conceptual/darwin/2003/1.0'";
-        $xmlns .= "xmlns::dwc='http://digir.net/schema/conceptual/darwin/2003/1.0'";
-        $xmlns .= "xsi:schemaLocation='http://digir.net/schema/protocol/2003/1.0 ";
-        $xmlns .= " http://digir.sourceforge.net/schema/protocol/2003/1.0/digir.xsd ";
-        $xmlns .= " http://digir.net/schema/conceptual/darwin/2003/1.0 " ;
-        $xmlns .= " http://digir.sourceforge.net/schema/conceptual/darwin/2003/1.0/darwin2.xsd'";
+        $xmlns  = "xmlns='http://digir.net/schema/protocol/2003/1.0'\n";
+        $xmlns .= "\txmlns:xsd='http://www.w3.org/2001/XMLSchema'\n";
+        $xmlns .= "\txmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n";
+        $xmlns .= "\txmlns:digir='http://digir.net/schema/protocol/2003/1.0'\n";
+        $xmlns .= "\txmlns:darwin='http://digir.net/schema/conceptual/darwin/2003/1.0'\n";
+        $xmlns .= "\txmlns:dwc='http://digir.net/schema/conceptual/darwin/2003/1.0'\n";
+        $xmlns .= "\txsi:schemaLocation='http://digir.net/schema/protocol/2003/1.0\n";
+        $xmlns .= "\t\thttp://digir.sourceforge.net/schema/protocol/2003/1.0/digir.xsd\n";
+        $xmlns .= "\t\thttp://digir.net/schema/conceptual/darwin/2003/1.0\n" ;
+        $xmlns .= "\t\thttp://digir.sourceforge.net/schema/conceptual/darwin/2003/1.0/darwin2.xsd'";
         return $xmlns;
     }
 
     public function header() {
-        return '<header>
-                <version>$version</version>
-                <sendTime>$DateFormatter.currentDateTimeAsXMLString()</sendTime>
-                <source>$hostAddress</source>
-                <destination resource="GBIF">'.$this->url.'</destination>
-                <type>search</type>
-                </header>';
+        $xml  = "\t<header>\n";
+        $xml .= "\t\t<version>\$version</version>\n";
+        $xml .= "\t\t<sendTime>\$DateFormatter.currentDateTimeAsXMLString()</sendTime>\n";
+        $xml .= "\t\t<source>\$hostAddress</source>\n";
+        $xml .= "\t\t<destination resource=\"GBIF\">".$this->url."</destination>\n";
+        $xml .= "\t\t<type>search</type>\n";
+        $xml .= "\t</header>\n";
+        return $xml ;
     }
 
     public function filters() {
-        $xml = '<filter>';
+        $xml = "\t\t<filter>\n";
         foreach($this->filters as $f) {
-            $xml .= '<'.$f->operator.">";
-            $xml .= '<dwc:'.$f->field.'>';
+            $xml .= "\t\t\t<".$f->operator.">\n";
+            $xml .= "\t\t\t\t<dwc:".$f->field.">";
             $xml .= $f->term;
-            $xml .= '</dwc:'.$f->field.'>';
-            $xml .= '</'.$f->operator.">";
+            $xml .= "</dwc:".$f->field.">\n";
+            $xml .= "\t\t\t</".$f->operator.">\n";
         }
-        $xml .= "</filter>";
+        $xml .= "\t\t</filter>";
         return $xml ;
     }
 
     public function records() {
-        $xml  = '';
-        $xml .= '<records limit="'.$this->limit.'" start="'.$this->start.'">';
-        $xml .= '<structure schemaLocation="http://digir.sourceforge.net/schema/conceptual/darwin/full/2003/1.0/darwin2full.xsd"/>';
-        $xml .= '</records>';
+        $xml  = "\t\t<records limit=\"".$this->limit."\" start=\"".$this->start."\">\n";
+        $xml .= "\t\t\t<structure schemaLocation=\"http://digir.sourceforge.net/schema/conceptual/darwin/full/2003/1.0/darwin2full.xsd\"/>\n";
+        $xml .= "\t\t</records>\n";
         return $xml ;
     }
 
     public function makeRequest() {
-        $xml  = '<request '.$this->xmlns()." >";
+        $xml  = "<request ".$this->xmlns()." >\n";
         $xml .= $this->header();
-        $xml .= '<search>';
+        $xml .= "\t<search>\n";
         $xml .= $this->filters() ;
-        $xml .= $this->records() ;
-        $xml .= '<count>$count</count>';
-        $xml .= '</search>';
-        $xml .= '</request>';
-        return str_replace("\n","",$xml);
+        $xml .= "\n".$this->records() ;
+        $xml .= "\t\t<count>\$count</count>";
+        $xml .= "\n\t</search>\n";
+        $xml .= "</request>";
+        return $xml;
     }
 
     public function parse($xml){
@@ -112,8 +111,8 @@ class SimpleDigir {
 
     public function call() {
         if(!empty($this->result)) return $this;
-        $request = urlencode($this->makeRequest());
-        $url = $this->url . "?request=".$request;
+        $request = $this->makeRequest();
+        $url = $this->url . "?request=".urlencode($request);
         $response = file_get_contents($url);
         if($response === false) return null;
         $this->result = $this->parse($response);
