@@ -8,7 +8,10 @@
         <script type="text/javascript" src="digir.js"></script>
     </head>
     <body>
-        <div id="search-panel"></div>
+        <div id="top">
+            <div id="search-panel"></div>
+            <div id="resource-result"></div>
+        </div>
         <div id="search-result"></div>
         <div id="search-details"></div>
     </body>

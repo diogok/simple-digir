@@ -31,6 +31,7 @@ Ext.onReady(function(){
                     mode: "local",
                     id: 'field',
                     width: 120,
+                    forceSelection: true,
                     store: new Ext.data.ArrayStore({
                         fields: ['field'],
                         data: [["ScientificName"],["Family"]]
@@ -48,12 +49,20 @@ Ext.onReady(function(){
                         data: [["like"],["equals"]]
                     }),
                     value:"like",
+                    forceSelection: true,
                     valueField: "operation",
                     displayField: "operation"
                 }),
                 new Ext.form.TextField({name:'term',id:'term',width:250, emptyText: ""})
             ],
             buttons: [
+                {text:"List resources",
+                 handler: function() {
+                    var url = searchSet.findById('url').getValue();
+                    var query = 'SELECT * FROM '+url ;
+                    resourceStore.setBaseParam('query',query);
+                    resourceStore.load();
+                }},
                 {text:"Search",
                  handler: function() {
                     var url = searchSet.findById('url').getValue();
@@ -64,7 +73,6 @@ Ext.onReady(function(){
                     var query = 'SELECT '+resource+' FROM '+url+' WHERE '+field+' '+operation+' \''+term+'\'';
                     searchStore.setBaseParam('query',query);
                     searchStore.load();
-                    searchResult.ds = searchStore;
                 }}
             ]
         });
@@ -82,6 +90,41 @@ Ext.onReady(function(){
 
     searchForm.render('search-panel');
 
+    var resourceStore = new Ext.data.Store({
+                id: "resourceStore",
+                proxy: new Ext.data.HttpProxy({
+                        url: "service.php",
+                        method: 'POST'
+                    }),
+                reader: new Ext.data.JsonReader({
+                        root:"result",
+                        idProperty: "code",
+                        totalProperty:"count",
+                        fields: [{name:"code"},{name:"name"}]
+                    })
+            });
+
+    var resourceResult = new Ext.grid.GridPanel({
+            colModel: new Ext.grid.ColumnModel([
+                    {readOnly: true, dataIndex: 'name', width: 190,header:"name"},
+                    {readOnly: true, dataIndex: 'code', width: 90, header: "code"}
+                ]),
+            width: 300,
+            height: 165,
+            autoScroll: true,
+            store: resourceStore,
+            style: {
+                marginTop: "10px",
+                marginLeft: "10px",
+                marginRight: "10px"
+            },
+            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+            title: 'Resource Result'
+        });
+
+    var resourceLoading = new Ext.LoadMask(Ext.getBody(),{msg:"Searching...",store:resourceStore});
+    resourceResult.render('resource-result');
+
     var searchStore = new Ext.data.Store({
                 id: "searchStore",
                 proxy: new Ext.data.HttpProxy({
@@ -96,11 +139,9 @@ Ext.onReady(function(){
                     })
             });
 
-    var searchLoadinf = new Ext.LoadMask(Ext.getBody(),{msg:"Searching...",store:searchStore});
-
     var searchResult = new Ext.grid.GridPanel({
             colModel: new Ext.grid.ColumnModel([
-                    {readOnly: true, dataIndex: 'Family', width: 150,header:"Family"},
+                    {readOnly: true, dataIndex: 'Family', width: 145,header:"Family"},
                     {readOnly: true, dataIndex: 'ScientificName', width: 250, header: "ScientificName"}
                 ]),
             width: 415,
@@ -115,6 +156,8 @@ Ext.onReady(function(){
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             title: 'Search Result'
         });
+
+    var searchLoading = new Ext.LoadMask(Ext.getBody(),{msg:"Searching...",store:searchStore});
 
     searchResult.getSelectionModel().on('rowselect', function(sm, rowIdx, record) {
             searchTemplate.overwrite(searchDetails.body, record.data);
@@ -145,6 +188,15 @@ Ext.onReady(function(){
 
     searchDetails.render('search-details');
 
+    var topPanel = new Ext.Panel ({
+            autoHeight: true,
+            autoWidth: true,
+            border: false,
+            layout:"column",
+            items: [ searchForm, resourceResult ]
+        })
+    topPanel.render('top');
+
     var panel = new Ext.Viewport({
                 layout:"border",
                 border: false,
@@ -152,7 +204,7 @@ Ext.onReady(function(){
                     border: false,
                 },
                 items: [
-                    {region: "north",contentEl:"search-panel" },
+                    {region: "north",contentEl:"top" , layout:"column"},
                     {region: "west",contentEl:"search-result"},
                     {region: "center",contentEl:"search-details" }
                 ]
