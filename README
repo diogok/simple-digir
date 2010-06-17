@@ -15,4 +15,21 @@ foreach($records as $record) {
 }
 ?>
 
-By now only the PHP Library is implemented, supporting only one parameter/filter per query.
+You can also list the resources of a digir server:
+
+<?php
+$recs = SimpleDigir::create($url)->setResource("*")->getResults();
+foreach($recs as $rec) {
+    echo $rec->code. " : " .$rec->name;
+}
+?>
+
+Also there is a small query interface (very fragile).
+<?php
+$resources = DigirQueyr::query("SELECT * from http://url.of/digi.php")->getResults();
+$records = DigirQuery::query("SELECT GBIF from http://url.of/digir.php")->getResults();
+$records = DigirQuery::query("SELECT GBIF from http://url.of/digir.php WHERE ScientificName like 'Quercus%'")->getResult();
+// not much more 
+?>
+
+There is a simple interface on index.php build using Sencha (extJs), you can test it in http://diogok.net/digir and the service.php can receive a query by post and return it as json.
