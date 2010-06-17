@@ -123,8 +123,10 @@ class SimpleDigir {
             $rec = new StdClass ;
             foreach($item->childNodes as $dwc) {
                 $name = $dwc->localName ;
-                $value = $dwc->nodeValue;
-                $rec->$name = $value;
+                if(!is_null($name) && strlen($name) >=1 ) {
+                    $value = $dwc->nodeValue;
+                    $rec->$name = $value;
+                }
             }
             $records[] = $rec;
         }
