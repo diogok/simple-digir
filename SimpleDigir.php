@@ -18,7 +18,8 @@ class SimpleDigir {
     }
 
     public function parseResources($xml) {
-        $dom = DOMDocument::loadXML($xml);
+        $dom = new DOMDocument;
+        $dom->loadXML($xml);
         $tags = $dom->getElementsByTagName("resource");
         $recs = array();
         foreach($tags as $item) {
