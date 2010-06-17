@@ -14,8 +14,19 @@ Ext.onReady(function(){
                 }
             },
             items:[ 
-                new Ext.form.TextField({emptyText:"URL",name:'url',id:'url', width: 450}),
-                new Ext.form.TextField({emptyText:"Resource name",name:'resource',id:'resource'}),
+                new Ext.form.ComboBox({
+                    mode: "local",
+                    id: 'url',
+                    emptyText: "URL",
+                    width: 450,
+                    store: new Ext.data.ArrayStore({
+                        fields: ['url'],
+                        data: digirUrls.map(function(i) {return [i]})
+                    }),
+                    valueField: "url",
+                    displayField: "url"
+                }),
+                new Ext.form.TextField({emptyText:"Resource name",name:'resource',id:'resource', width:150}),
                 new Ext.form.ComboBox({
                     mode: "local",
                     id: 'field',
