@@ -100,8 +100,8 @@ Ext.onReady(function(){
 
     var searchResult = new Ext.grid.GridPanel({
             colModel: new Ext.grid.ColumnModel([
-                    {readOnly: true, dataIndex: 'Family', width: 150},
-                    {readOnly: true, dataIndex: 'ScientificName', width: 250}
+                    {readOnly: true, dataIndex: 'Family', width: 150,header:"Family"},
+                    {readOnly: true, dataIndex: 'ScientificName', width: 250, header: "ScientificName"}
                 ]),
             width: 415,
             height: 400,
