@@ -34,7 +34,7 @@ Ext.onReady(function(){
                     forceSelection: true,
                     store: new Ext.data.ArrayStore({
                         fields: ['field'],
-                        data: [["ScientificName"],["Family"]]
+                        data: darwinFields.map(function(i){return [i]}) 
                     }),
                     value: "ScientificName",
                     valueField: "field",
@@ -106,8 +106,8 @@ Ext.onReady(function(){
 
     var resourceResult = new Ext.grid.GridPanel({
             colModel: new Ext.grid.ColumnModel([
-                    {readOnly: true, dataIndex: 'name', width: 190,header:"name"},
-                    {readOnly: true, dataIndex: 'code', width: 90, header: "code"}
+                    {readOnly: true, dataIndex: 'name', width: 190,header: "Name"},
+                    {readOnly: true, dataIndex: 'code', width: 90, header: "Code"}
                 ]),
             width: 300,
             height: 165,
