@@ -3,12 +3,33 @@ include 'DigirQuery.php';
 if(isset($_GET["query"])) {
     $_POST["query"] = $_GET["query"];
 }
+
+if(!file_exists("cache.db")){
+    $db = new PDO("sqlite:cache.db");
+    $db->exec("CREATE TABLE cache (query TEXT PRIMARY KEY, result TEXT, last INTEGER)");
+    $db = null;
+}
+
 if(isset($_POST["query"])) {
-    try {
-        $result = DigirQuery::create($_POST["query"])->getResult();
-        echo "{success: true, count: ".count($result).", result:". json_encode($result)  ."}";
-    } catch(Exception $e) {
-        echo "{success:false, count:0, result: []}";
+    $db = new PDO("sqlite:cache.db");
+    $caches = $db->prepare("SELECT result, last FROM cache WHERE query = ?");
+    $caches->execute(array($_POST["query"]));
+    $cache = $caches->fetchObject();
+    $tolerance = time() - (24 * 60 * 60);
+    if($cache != false && $cache->last >= $tolerance) {
+        echo $cache->result ;
+    } else {
+        $records = DigirQuery::create($_POST["query"])->getResult();
+        $result  = "{success: true, count: ".count($records).", result:". json_encode($records)  ."}";
+        if($cache == false) {
+            $insert  = $db->prepare('INSERT INTO cache (query,result,last) VALUES (?,?,?)');
+            $insert->execute(array($_POST["query"],$result,time()));
+        } else {
+            $update  = $db->prepare('UPDATE cache set result = ?, last = ? WHERE query = ?');
+            $update->execute(array($result,time(),$_POST["query"]));
+            var_dump($update->errorinfo());
+        }
+        echo $result;
     }
 }
 ?>
