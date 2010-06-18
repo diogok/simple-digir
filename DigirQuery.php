@@ -23,8 +23,9 @@ class DigirQuery {
         $clients = $this->makeClients();
         $results = array();
         foreach($clients as $c) {
-            $results = $c->getResult();
+            $results[] = $c->getResult();
         }
+        var_dump($results);
         return $this->parseResults($results);
     }
 
@@ -32,6 +33,7 @@ class DigirQuery {
         $clients = array();
         foreach($this->from() as $url=>$resources) {
             if(is_int($url)) {
+               $this->fields = array('name'=>'name','code'=>'code');
                $clients[] = SimpleDigir::create($resources)->setResource("*");
             } else {
                 foreach($resources as $resource) {
@@ -62,13 +64,15 @@ class DigirQuery {
             }
         }
         $response = array() ;
-        foreach($records as $rec) {
-            $mappings = $this->fields();
-            $item = new StdClass ;
-            foreach($mappings as $field=>$map) {
-                $item->$map = $rec->$field;
+        $mappings = $this->fields();
+        if(count($mappings) >= 1) {
+            foreach($records as $rec) {
+                $item = new StdClass ;
+                foreach($mappings as $field=>$map) {
+                    $item->$map = $rec->$field;
+                }
+                $response[] = $item;
             }
-            $response[] = $item;
         }
         return $response;
     }

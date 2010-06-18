@@ -59,7 +59,7 @@ Ext.onReady(function(){
                 {text:"List resources",
                  handler: function() {
                     var url = searchSet.findById('url').getValue();
-                    var query = 'SELECT * FROM '+url ;
+                    var query = "SELECT * FROM '"+url+"'" ;
                     resourceStore.setBaseParam('query',query);
                     resourceStore.load();
                 }},
@@ -69,8 +69,9 @@ Ext.onReady(function(){
                     var resource = searchSet.findById('resource').getValue();
                     var field = searchSet.findById('field').getValue();
                     var operation = searchSet.findById('operation').getValue();
+                    if(operation == "equals") operation = "=";
                     var term = searchSet.findById('term').getValue();
-                    var query = 'SELECT '+resource+' FROM '+url+' WHERE '+field+' '+operation+' \''+term+'\'';
+                    var query = "SELECT * FROM '"+url+"'.'"+ resource+ "' WHERE "+field+" "+operation+" '"+term+"'";
                     searchStore.setBaseParam('query',query);
                     searchStore.load();
                 }}

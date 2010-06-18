@@ -26,9 +26,9 @@ foreach($recs as $rec) {
 
 Also there is a small query interface (very fragile).
 <?php
-$resources = DigirQueyr::query("SELECT * from 'http://url.of/digi.php'")->getResults();
-$records = DigirQueyr::query("SELECT * from 'http://url.of/digi.php'.'name_of_resource'")->getResults();
-$records = DigirQuery::query("SELECT * from 'http://url.of/digir.php'.'name_of_resouece' WHERE ScientificName like 'Quercus%'")->getResult();
+$resources = DigirQuery::create("SELECT * from 'http://url.of/digi.php'")->getResults();
+$records = DigirQuery::create("SELECT * from 'http://url.of/digi.php'.'name_of_resource'")->getResults();
+$records = DigirQuery::create("SELECT * from 'http://url.of/digir.php'.'name_of_resouece' WHERE ScientificName like 'Quercus%'")->getResult();
 ?>
 
 There is a simple interface on index.php build using Sencha (extJs), you can test it in http://diogok.net/digir and the service.php can receive a query by post and return it as json.
