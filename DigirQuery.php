@@ -20,26 +20,41 @@ class DigirQuery {
     }
 
     public function getResult() {
-        $results = resultsay();
-        foreach($this->from() as $url=>$resource) {
+        $clients = $this->makeClients();
+        $results = array();
+        foreach($clients as $c) {
+            $results = $c->getResult();
+        }
+        return $this->parseResults($results);
+    }
+
+    public function makeClients() {
+        $clients = array();
+        foreach($this->from() as $url=>$resources) {
             if(is_int($url)) {
-               $results[] = SimpleDigir::create($resource)->setResource("*")->getResult();
+               $clients[] = SimpleDigir::create($resources)->setResource("*");
             } else {
-                $q = SimpleDigir::create($url)->setResource($resource);
-                $filters = $this->where();
-                if(isset($filters['equals'])) {
-                    foreach($filters['equals'] as $field=>$value) {
-                        $q->addFilter($field,"equals",$value);
+                foreach($resources as $resource) {
+                    $q = SimpleDigir::create($url)->setResource($resource);
+                    $filters = $this->where();
+                    if(isset($filters['equals'])) {
+                        foreach($filters['equals'] as $field=>$value) {
+                            $q->addFilter($field,"equals",$value);
+                        }
                     }
-                }
-                if(isset($filters['like'])) {
-                    foreach($filters['like'] as $field=>$value) {
-                        $q->addFilter($field,"like",$value);
+                    if(isset($filters['like'])) {
+                        foreach($filters['like'] as $field=>$value) {
+                            $q->addFilter($field,"like",$value);
+                        }
                     }
+                    $clients[] = $q;
                 }
-                $results[] = $q->getResult();
             }
         }
+        return $clients;
+    }
+
+    public function parseResults($results) {
         $records = array();
         foreach($results as $result) {
             foreach($result as $record) {
@@ -51,7 +66,7 @@ class DigirQuery {
             $mappings = $this->fields();
             $item = new StdClass ;
             foreach($mappings as $field=>$map) {
-                $item->$field = $rec[$map];
+                $item->$map = $rec->$field;
             }
             $response[] = $item;
         }
