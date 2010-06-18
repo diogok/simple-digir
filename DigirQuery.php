@@ -25,7 +25,6 @@ class DigirQuery {
         foreach($clients as $c) {
             $results[] = $c->getResult();
         }
-        var_dump($results);
         return $this->parseResults($results);
     }
 
@@ -73,6 +72,8 @@ class DigirQuery {
                 }
                 $response[] = $item;
             }
+        } else {
+            $response = $records;
         }
         return $response;
     }
