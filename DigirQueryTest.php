@@ -66,6 +66,11 @@ class DigirQueryTest extends PHPUnit_Framework_TestCase {
         $expected[] = $expected22;
 
         $this->assertEquals($expected,$query->parseResults($fake));
+
+        $sql2 =  "SELECT * FROM 'http://url.com'.'foo-bar' WHERE field1='hi'";
+        $query2 = DigirQuery::create($sql2);
+        $expected2 = array_merge($fake1,$fake2);
+        $this->assertEquals($expected2,$query2->parseResults($fake));
     }
 
     function testQuery0() {
