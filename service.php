@@ -11,6 +11,7 @@ if(!file_exists("cache.db")){
 }
 
 if(isset($_POST["query"])) {
+    $_POST["query"] = stripslashes($_POST["query"]);
     $db = new PDO("sqlite:cache.db");
     $caches = $db->prepare("SELECT result, last FROM cache WHERE query = ?");
     $caches->execute(array($_POST["query"]));
@@ -27,7 +28,6 @@ if(isset($_POST["query"])) {
         } else {
             $update  = $db->prepare('UPDATE cache set result = ?, last = ? WHERE query = ?');
             $update->execute(array($result,time(),$_POST["query"]));
-            var_dump($update->errorinfo());
         }
         echo $result;
     }
