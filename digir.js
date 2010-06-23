@@ -60,6 +60,7 @@ Ext.onReady(function(){
                  handler: function() {
                     var url = searchSet.findById('url').getValue();
                     var query = "SELECT * FROM '"+url+"'" ;
+                    resourceStore.removeAll();
                     resourceStore.setBaseParam('query',query);
                     resourceStore.load();
                 }},
@@ -70,10 +71,13 @@ Ext.onReady(function(){
                     var field = searchSet.findById('field').getValue();
                     var operation = searchSet.findById('operation').getValue();
                     if(operation == "equals") operation = "=";
-                    var term = searchSet.findById('term').getValue();
-                    var query = "SELECT * FROM '"+url+"'.'"+ resource+ "' WHERE "+field+" "+operation+" '"+term+"'";
+                    var term = searchSet.findById('term').getValue().replace("%","");
+                    var query = "SELECT * FROM '"+url+"'.'"+ resource+ "' WHERE "+field+" "+operation+" '%"+term+"%'";
+                    searchStore.removeAll();
                     searchStore.setBaseParam('query',query);
-                    searchStore.load();
+                    searchStore.load({callback: function(r,o,s) {
+                                            searchResult.setTitle("Search Result: "+ searchStore.getCount())
+                                        }});
                 }}
             ]
         });
@@ -126,6 +130,10 @@ Ext.onReady(function(){
     var resourceLoading = new Ext.LoadMask(Ext.getBody(),{msg:"Searching...",store:resourceStore});
     resourceResult.render('resource-result');
 
+    resourceResult.getSelectionModel().on('rowselect', function(sm, rowIdx, record) {
+       searchSet.findById('resource').setValue(record.data.code);
+    });
+
     var searchStore = new Ext.data.Store({
                 id: "searchStore",
                 proxy: new Ext.data.HttpProxy({
@@ -142,8 +150,8 @@ Ext.onReady(function(){
 
     var searchResult = new Ext.grid.GridPanel({
             colModel: new Ext.grid.ColumnModel([
-                    {readOnly: true, dataIndex: 'Family', width: 145,header:"Family"},
-                    {readOnly: true, dataIndex: 'ScientificName', width: 250, header: "ScientificName"}
+                    {readOnly: true, dataIndex: 'Family', width: 145,header:"Family", sortable: true},
+                    {readOnly: true, dataIndex: 'ScientificName', width: 250, header: "ScientificName", sortable: true}
                 ]),
             width: 415,
             height: 400,
@@ -161,21 +169,26 @@ Ext.onReady(function(){
     var searchLoading = new Ext.LoadMask(Ext.getBody(),{msg:"Searching...",store:searchStore});
 
     searchResult.getSelectionModel().on('rowselect', function(sm, rowIdx, record) {
-            searchTemplate.overwrite(searchDetails.body, record.data);
+            var data = darwinFields.map(function(f) {
+                    return [f , record.data[f]];
+                });
+            searchDetails.getStore().loadData(data);
         });
 
 
     searchResult.render('search-result');
 
-    var searchTemplate = new Ext.Template(
-                darwinFields.map(function(i){
-                        return "<p>"+i+": <i>{"+i+"}</i></p>";
-                    })
-            );
-
-    var searchDetails = new Ext.Panel({
+    var searchDetails = new Ext.grid.GridPanel({
+            colModel: new Ext.grid.ColumnModel([
+                    {readOnly: true, dataIndex: 'field', width: 180, header: "Field", sortable: true},
+                    {readOnly: true, dataIndex: 'value', width: 350, header: "Value", sortable: true}
+                ]),
+            ds: new Ext.data.ArrayStore({
+                    fields: ['field','value']
+                    
+                }),
             title: "Record Details",
-            width: "90%",
+            width: 550,
             height: 400,
             autoScroll: true,
             style: {
@@ -184,7 +197,7 @@ Ext.onReady(function(){
                 marginRight: "10px",
                 fontSize: "12px",
                 lineHeight: "20px"
-            },
+            }
         });
 
     searchDetails.render('search-details');
