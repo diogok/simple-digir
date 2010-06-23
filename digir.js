@@ -71,8 +71,11 @@ Ext.onReady(function(){
                     var field = searchSet.findById('field').getValue();
                     var operation = searchSet.findById('operation').getValue();
                     if(operation == "equals") operation = "=";
-                    var term = searchSet.findById('term').getValue().replace("%","");
-                    var query = "SELECT * FROM '"+url+"'.'"+ resource+ "' WHERE "+field+" "+operation+" '%"+term+"%'";
+                    var term = searchSet.findById('term').getValue();
+                    if(operation == "like") {
+                        term = '%'+term+'%';
+                    }
+                    var query = "SELECT * FROM '"+url+"'.'"+ resource+ "' WHERE "+field+" "+operation+" '"+term+"'";
                     searchStore.removeAll();
                     searchStore.setBaseParam('query',query);
                     searchStore.load({callback: function(r,o,s) {
