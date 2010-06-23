@@ -17,11 +17,11 @@ if(isset($_POST["query"])) {
     $caches->execute(array($_POST["query"]));
     $cache = $caches->fetchObject();
     $tolerance = time() - (24 * 60 * 60);
-    if($cache != false && $cache->last >= $tolerance) {
-        echo $cache->result ;
+    if($cache != false && $cache->last >= $tolerance ) {
+        $r = $cache->result ;
     } else {
         $records = DigirQuery::create($_POST["query"])->getResult();
-        $result  = "{success: true, count: ".count($records).", result:". json_encode($records)  ."}";
+        $result  = '{"success": true, "count": '.count($records).', "result":'. json_encode($records)  .'}';
         if($cache == false) {
             $insert  = $db->prepare('INSERT INTO cache (query,result,last) VALUES (?,?,?)');
             $insert->execute(array($_POST["query"],$result,time()));
@@ -29,7 +29,25 @@ if(isset($_POST["query"])) {
             $update  = $db->prepare('UPDATE cache set result = ?, last = ? WHERE query = ?');
             $update->execute(array($result,time(),$_POST["query"]));
         }
-        echo $result;
+        $r = $result;
+    }
+    if(isset($_GET['csv'])) {
+        $data = json_decode($r)->result ;
+        $csv = "";
+        foreach($data[1] as $k=>$v) {
+            $csv .= $k.";";
+        }
+        $csv .= "\n";
+        foreach($data as $obj) {
+            foreach($obj as $v) {
+                $csv .= str_replace(";",",",$v).";";
+            }
+            $csv .= "\n";
+        }
+        echo $csv;
+    } else {
+        echo $r ;
     }
 }
+
 ?>

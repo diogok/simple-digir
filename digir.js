@@ -163,7 +163,13 @@ Ext.onReady(function(){
                 marginRight: "10px"
             },
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
-            title: 'Search Result'
+            title: 'Search Result',
+            fbar: [{
+                text: "Download CSV",
+                handler: function(b,e) {
+                    window.open('service.php?csv&query='+ searchStore.baseParams['query'],"csv");
+                }
+            }]
         });
 
     var searchLoading = new Ext.LoadMask(Ext.getBody(),{msg:"Searching...",store:searchStore});
